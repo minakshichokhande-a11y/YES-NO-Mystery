@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { ArrowLeft, Coins, Settings, Volume2, VolumeX } from 'lucide-react';
 import { PlayerProfile } from '../types/game';
 import { sound } from '../services/sound';
@@ -13,7 +13,7 @@ interface TopHeaderProps {
   showBack?: boolean;
 }
 
-export const TopHeader: React.FC<TopHeaderProps> = ({
+export const TopHeader: React.FC<TopHeaderProps> = memo(({
   profile,
   title,
   subtitle,
@@ -110,4 +110,4 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
       </div>
     </header>
   );
-};
+});

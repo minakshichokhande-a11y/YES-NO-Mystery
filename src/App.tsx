@@ -57,7 +57,7 @@ export default function App() {
     });
   };
 
-  // Sync initial sound settings
+  // Sync initial sound settings & preload crucial character assets
   useEffect(() => {
     sound.setMuted(!profile.settings.soundEffects);
     if (profile.settings.theme === 'dark') {
@@ -65,20 +65,38 @@ export default function App() {
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    // Preload critical images to prevent pop-in
+    const img1 = new Image();
+    img1.src = '/src/assets/images/detective_alex_main_1793883122095.jpg';
+    const img2 = new Image();
+    img2.src = '/src/assets/images/detective_alex_victory_1793883123075.jpg';
   }, []);
 
-  // Track play time in background
+  // Track play time without re-rendering the root tree every 1 second
   useEffect(() => {
     const timer = setInterval(() => {
+      // Periodic 30-second low-priority sync
       updateProfile((p) => ({
         ...p,
-        totalTimePlayedSeconds: p.totalTimePlayedSeconds + 1,
+        totalTimePlayedSeconds: p.totalTimePlayedSeconds + 30,
       }));
-    }, 1000);
-    return () => clearInterval(timer);
+    }, 30000);
+
+    const handleBeforeUnload = () => {
+      import('./services/storage').then((m) => m.flushSaveProfile());
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('pagehide', handleBeforeUnload);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('pagehide', handleBeforeUnload);
+    };
   }, []);
 
-  // Handle Android Back Navigation
+  // Handle Android Back Navigation with proper listener cleanup
   useEffect(() => {
     const handlePopState = (e: PopStateEvent) => {
       e.preventDefault();
@@ -86,7 +104,7 @@ export default function App() {
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  });
+  }, [isPauseOpen, isSettingsOpen, screen]);
 
   const handleBackNavigation = () => {
     if (isPauseOpen) {

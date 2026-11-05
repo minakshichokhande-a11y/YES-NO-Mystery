@@ -45,12 +45,30 @@ export function loadProfile(): PlayerProfile {
   }
 }
 
+let pendingSaveTimeout: ReturnType<typeof setTimeout> | null = null;
+let latestProfileToSave: PlayerProfile | null = null;
+
+export function flushSaveProfile(): void {
+  if (typeof window === 'undefined' || !latestProfileToSave) return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(latestProfileToSave));
+    latestProfileToSave = null;
+    if (pendingSaveTimeout) {
+      clearTimeout(pendingSaveTimeout);
+      pendingSaveTimeout = null;
+    }
+  } catch (err) {
+    console.error('Failed to flush game state to local storage:', err);
+  }
+}
+
 export function saveProfile(profile: PlayerProfile): void {
   if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
-  } catch (err) {
-    console.error('Failed to save game state to local storage:', err);
+  latestProfileToSave = profile;
+  if (!pendingSaveTimeout) {
+    pendingSaveTimeout = setTimeout(() => {
+      flushSaveProfile();
+    }, 150);
   }
 }
 

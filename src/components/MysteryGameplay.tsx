@@ -39,6 +39,32 @@ interface MysteryGameplayProps {
   onBack: () => void;
 }
 
+const LevelTimer: React.FC<{ timeRef: React.RefObject<number>; levelId: number }> = React.memo(
+  ({ timeRef, levelId }) => {
+    const [seconds, setSeconds] = useState(0);
+
+    useEffect(() => {
+      setSeconds(0);
+      const timer = setInterval(() => {
+        setSeconds((s) => {
+          const next = s + 1;
+          (timeRef as { current: number }).current = next;
+          return next;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }, [levelId, timeRef]);
+
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return (
+      <span className="tabular-nums font-mono">
+        {mins}:{secs < 10 ? '0' : ''}{secs}
+      </span>
+    );
+  }
+);
+
 export const MysteryGameplay: React.FC<MysteryGameplayProps> = ({
   level,
   profile,
@@ -55,21 +81,13 @@ export const MysteryGameplay: React.FC<MysteryGameplayProps> = ({
   } | null>(null);
   const [alexPose, setAlexPose] = useState<DetectivePose>('idle');
   const [alexDialogue, setAlexDialogue] = useState<string>('Ready to solve this mystery?');
-  const [timeSeconds, setTimeSeconds] = useState(0);
+  const timeSecondsRef = useRef(0);
   const [isSolutionModalOpen, setIsSolutionModalOpen] = useState(false);
   const [solutionInput, setSolutionInput] = useState('');
   const [solutionError, setSolutionError] = useState<string | null>(null);
   const [isHintsModalOpen, setIsHintsModalOpen] = useState(false);
 
   const historyEndRef = useRef<HTMLDivElement>(null);
-
-  // Timer
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeSeconds((s) => s + 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [level.id]);
 
   // Reset when level changes
   useEffect(() => {
@@ -78,7 +96,7 @@ export const MysteryGameplay: React.FC<MysteryGameplayProps> = ({
     setCurrentAnswer(null);
     setAlexPose('idle');
     setAlexDialogue('Examine the crime scene clues and ask your first question!');
-    setTimeSeconds(0);
+    timeSecondsRef.current = 0;
     setSolutionInput('');
     setSolutionError(null);
   }, [level.id]);
@@ -87,12 +105,6 @@ export const MysteryGameplay: React.FC<MysteryGameplayProps> = ({
   useEffect(() => {
     historyEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [history]);
-
-  const formatTime = (totalSec: number) => {
-    const mins = Math.floor(totalSec / 60);
-    const secs = totalSec % 60;
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  };
 
   const handleAskQuestion = (textToAsk?: string) => {
     const text = (textToAsk || questionInput).trim();
@@ -140,7 +152,7 @@ export const MysteryGameplay: React.FC<MysteryGameplayProps> = ({
       sound.playMysterySolved();
       setAlexPose('victory');
       setIsSolutionModalOpen(false);
-      onLevelCompleted(level, timeSeconds, history.length);
+      onLevelCompleted(level, timeSecondsRef.current, history.length);
     } else {
       sound.playNo();
       setSolutionError(result.feedback);
@@ -172,7 +184,7 @@ export const MysteryGameplay: React.FC<MysteryGameplayProps> = ({
 
           <div className="flex items-center gap-1">
             <Clock className="w-3.5 h-3.5 text-amber-400" />
-            <span className="tabular-nums font-mono">{formatTime(timeSeconds)}</span>
+            <LevelTimer timeRef={timeSecondsRef} levelId={level.id} />
           </div>
 
           <button

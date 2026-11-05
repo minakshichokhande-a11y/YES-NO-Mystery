@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Home, BookOpen, Gift, User } from 'lucide-react';
 import { ScreenType } from '../types/game';
 import { sound } from '../services/sound';
@@ -9,7 +9,7 @@ interface BottomNavProps {
   unclaimedRewardsCount?: number;
 }
 
-export const BottomNav: React.FC<BottomNavProps> = ({
+export const BottomNav: React.FC<BottomNavProps> = memo(({
   currentScreen,
   onNavigate,
   unclaimedRewardsCount = 0,
@@ -75,4 +75,4 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       </div>
     </nav>
   );
-};
+});
