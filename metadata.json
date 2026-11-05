@@ -1,0 +1,6 @@
+{
+  "name": "YES / NO MYSTERY – Ultimate Detective",
+  "description": "An interactive mystery investigation puzzle game with 200 handcrafted cases, 10 chapters, Detective Alex, question-answer engine, hints, and achievements.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
