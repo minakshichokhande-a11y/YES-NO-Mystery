@@ -274,6 +274,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </button>
             </div>
           </div>
+
+          {/* Android App Installation Card */}
+          <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-950/50 to-indigo-950/50 border border-purple-500/30 flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-base">📱</span>
+              <span className="text-xs font-bold text-white">Install on Android</span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              To install directly as an Android app on your phone: tap your browser menu (<strong>⋮</strong>) and select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.
+            </p>
+          </div>
         </div>
 
         {/* Data Management Section */}

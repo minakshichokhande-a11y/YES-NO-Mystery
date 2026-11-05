@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "YES / NO MYSTERY – Ultimate Detective",
+  "short_name": "YesNoMystery",
+  "description": "An interactive mystery investigation puzzle game with 200 handcrafted cases, 10 chapters, Detective Alex, question-answer engine, hints, and achievements.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#101426",
+  "background_color": "#101426",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
