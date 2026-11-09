@@ -12,6 +12,7 @@ import {
   Download,
   Upload,
   AlertTriangle,
+  FileCode,
 } from 'lucide-react';
 import { PlayerProfile } from '../types/game';
 import { exportSaveData, importSaveData } from '../services/storage';
@@ -273,6 +274,28 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 HI
               </button>
             </div>
+          </div>
+
+          {/* Standalone Single File HTML Download */}
+          <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/40 to-teal-950/40 border border-emerald-500/30 flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileCode className="w-4 h-4 text-emerald-400" />
+                <span className="text-xs font-bold text-white">Standalone Offline Game</span>
+              </div>
+              <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full">Single HTML</span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              Complete game with all 200 cases combined into one single offline HTML file. Double click to play anywhere!
+            </p>
+            <a
+              href="/yes_no_mystery.html"
+              download="yes_no_mystery.html"
+              className="mt-1 w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 transition-colors text-center"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Download Single HTML File</span>
+            </a>
           </div>
 
           {/* Android App Installation Card */}
